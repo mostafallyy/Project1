@@ -9,6 +9,32 @@ The core implementation strategy shifts 100% of the cryptographic masking and en
 
 ## 🏗️ Architectural Topology
 
+```
+[ Client Devices (Phone/Laptop) ]
+│
+▼ (Local Secure Wi-Fi Broadcast)
+┌────────────────────────────────────────┐
+│  IRAN NODE: GL.iNet OpenWrt Router     │
+│  - Captures Layer 2/3 traffic          │
+│  - Wraps payload in VLESS-Reality      │
+└──────────────────┬─────────────────────┘
+                   │
+                   ▼ (Camouflaged TLS 1.3 Stream via Port 443)
+[ State Firewall / DPI ] ───► (Probes dropped/mirrored to legitimate SNI)
+                   │
+                   ▼ (Global Internet)
+┌────────────────────────────────────────┐
+│  CANADA NODE: Residential Linux Server  │
+│  - Retains Private Keys / Validates ID │
+│  - Decrypts proxy packets              │
+└──────────────────┬─────────────────────┘
+                   │
+                   ▼
+          [ Unrestricted Web ]
+```
+
+---
+
 ## 🛠️ The Hardware Stack
 *   **Canada Node (Gateway Server):** [Insert your hardware here, e.g., Raspberry Pi 4 / Spare Ubuntu x86 PC] hardwired via Ethernet to residential router.
 *   **Iran Node (Edge Client):** GL.iNet Travel Router running an OpenWrt-derived kernel with native hardware crypto-acceleration.
